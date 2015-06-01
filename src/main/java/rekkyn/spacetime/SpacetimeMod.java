@@ -1,14 +1,14 @@
 package rekkyn.spacetime;
 
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import cpw.mods.fml.common.registry.EntityRegistry;
-import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import net.minecraftforge.fml.common.registry.EntityRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import rekkyn.spacetime.entity.SpacetimeFluctuationEntity;
 import rekkyn.spacetime.init.ModBlocks;
 import rekkyn.spacetime.init.ModItems;
@@ -30,7 +30,6 @@ public class SpacetimeMod {
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-        ModItems.init();
         ModBlocks.init();
         network = NetworkRegistry.INSTANCE.newSimpleChannel("Spacetime");
         Network.init(network);
@@ -38,6 +37,8 @@ public class SpacetimeMod {
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
+        ModItems.registerItemIcons(event);
+        ModBlocks.registerBlockIcons(event);
         proxy.register();
         GameRegistry.registerWorldGenerator(new SpacetimeWorldGen(), 1);
         EntityRegistry.registerModEntity(SpacetimeFluctuationEntity.class, "spacetimeFluctuation", 0, this, 128, 1, true);

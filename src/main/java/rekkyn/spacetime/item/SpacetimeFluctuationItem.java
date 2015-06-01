@@ -9,8 +9,12 @@ public class SpacetimeFluctuationItem extends GenericItem {
 
     public SpacetimeFluctuationItem() {
         super();
-        setUnlocalizedName("spacetimeFluctuationItem");
         setMaxStackSize(1);
+    }
+
+    @Override
+    public String getName() {
+        return "spacetimeFluctuationItem";
     }
 
     @Override

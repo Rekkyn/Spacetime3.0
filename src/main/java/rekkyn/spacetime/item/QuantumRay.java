@@ -4,6 +4,10 @@ public class QuantumRay extends GenericItem {
 
     public QuantumRay() {
         super();
-        setUnlocalizedName("quantumRay");
+    }
+
+    @Override
+    public String getName() {
+        return "quantumRay";
     }
 }

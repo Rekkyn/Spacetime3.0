@@ -1,27 +1,25 @@
 package rekkyn.spacetime.block;
 
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.block.BlockContainer;
+
+import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import rekkyn.spacetime.SpacetimeMod;
 import rekkyn.spacetime.network.ParticlePacket;
 import rekkyn.spacetime.particle.ParticleEffects;
-import rekkyn.spacetime.reference.Reference;
 import rekkyn.spacetime.tileentity.TileSpacetimeFluctuation;
-import rekkyn.spacetime.utility.CreativeTabSpacetime;
 import rekkyn.spacetime.utility.MathUtil;
 
 import java.util.Random;
 
-public class SpacetimeFluctuation extends BlockContainer {
+public class SpacetimeFluctuation extends GenericBlock implements ITileEntityProvider {
 
     public SpacetimeFluctuation() {
         this(Material.rock);
@@ -29,15 +27,15 @@ public class SpacetimeFluctuation extends BlockContainer {
 
     protected SpacetimeFluctuation(Material material) {
         super(material);
-        setBlockName("spacetimeFluctuation");
-        setCreativeTab(CreativeTabSpacetime.SPACETIMETAB);
         setLightLevel(1);
         setBlockBounds(0.25F, 0.25F, 0.25F, 0.75F, 0.75F, 0.75F);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void randomDisplayTick(World world, int x, int y, int z, Random rand) {
+    public void randomDisplayTick(World world, BlockPos pos, IBlockState state, Random rand) {
+        int x = pos.getX();
+        int y = pos.getY();
+        int z = pos.getZ();
         if (rand.nextInt(60) == 0) {
             world.playSound(x + 0.5D, y + 0.5D, z + 0.5D, "portal.portal", 0.5F, rand.nextFloat() * 0.4F + 0.8F, false);
         }
@@ -55,8 +53,12 @@ public class SpacetimeFluctuation extends BlockContainer {
     }
 
     @Override
-    public boolean onBlockActivated(World worldObj, int xCoord, int yCoord, int zCoord, EntityPlayer entity, int p_149727_6_,
-                                    float p_149727_7_, float p_149727_8_, float p_149727_9_) {
+    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer entity, EnumFacing side, float hitX,
+                                    float hitY, float hitZ) {
+        int x = pos.getX();
+        int y = pos.getY();
+        int z = pos.getZ();
+
         double radius = 8;
         double spawnX;
         double spawnY;
@@ -69,11 +71,11 @@ public class SpacetimeFluctuation extends BlockContainer {
             if (spawnX * spawnX + spawnY * spawnY + spawnZ * spawnZ < radius * radius) break;
         }
 
-        ParticlePacket packet = new ParticlePacket(ParticleEffects.ParticleTypes.ORBIT, xCoord + spawnX + 0.5, yCoord + spawnY + 0.5,
-                                                   zCoord + spawnZ + 0.5, MathUtil.NegOneToOne() * 0.3, MathUtil.NegOneToOne() * 0.3,
+        ParticlePacket packet = new ParticlePacket(ParticleEffects.ParticleTypes.ORBIT, x + spawnX + 0.5, y + spawnY + 0.5,
+                                                   z + spawnZ + 0.5, MathUtil.NegOneToOne() * 0.3, MathUtil.NegOneToOne() * 0.3,
                                                    MathUtil.NegOneToOne() * 0.3, entity);
-        SpacetimeMod.network.sendToAllAround(packet, new NetworkRegistry.TargetPoint(worldObj.provider.dimensionId, xCoord + spawnX + 0.5,
-                                                                                     yCoord + spawnY + 0.5, zCoord + spawnZ + 0.5, 32));
+        SpacetimeMod.network.sendToAllAround(packet, new NetworkRegistry.TargetPoint(world.provider.getDimensionId(), x + spawnX + 0.5,
+                                                                                     y + spawnY + 0.5, z + spawnZ + 0.5, 32));
         return true;
     }
 
@@ -83,17 +85,17 @@ public class SpacetimeFluctuation extends BlockContainer {
     }
 
     @Override
-    public boolean renderAsNormalBlock() {
-        return false;
-    }
-
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(IBlockAccess par1IBlockAccess, int par2, int par3, int par4, int par5) {
+    public boolean isFullCube() {
         return false;
     }
 
     @Override
-    public AxisAlignedBB getCollisionBoundingBoxFromPool(World par1World, int par2, int par3, int par4) {
+    public int getRenderType() {
+        return -1;
+    }
+
+    @Override
+    public AxisAlignedBB getCollisionBoundingBox(World worldIn, BlockPos pos, IBlockState state) {
         return null;
     }
 
@@ -102,19 +104,7 @@ public class SpacetimeFluctuation extends BlockContainer {
         return new TileSpacetimeFluctuation();
     }
 
-    @Override
-    public String getUnlocalizedName() {
-        return String.format("tile.%s%s", Reference.MOD_ID.toLowerCase() + ":", getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
+    public String getName() {
+        return "spacetimeFluctuation";
     }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void registerBlockIcons(IIconRegister iconRegister) {
-        blockIcon = iconRegister.registerIcon(String.format("%s", getUnwrappedUnlocalizedName(this.getUnlocalizedName())));
-    }
-
-    protected String getUnwrappedUnlocalizedName(String unlocalizedName) {
-        return unlocalizedName.substring(unlocalizedName.indexOf(".") + 1);
-    }
-
 }

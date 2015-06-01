@@ -1,7 +1,7 @@
 package rekkyn.spacetime.init;
 
-import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import cpw.mods.fml.relauncher.Side;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import net.minecraftforge.fml.relauncher.Side;
 import rekkyn.spacetime.network.ParticlePacket;
 
 public class Network {

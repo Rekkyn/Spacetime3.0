@@ -1,13 +1,14 @@
 package rekkyn.spacetime.tileentity;
 
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.server.gui.IUpdatePlayerListBox;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.Vec3;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import rekkyn.spacetime.SpacetimeMod;
 import rekkyn.spacetime.network.ParticlePacket;
 import rekkyn.spacetime.particle.ParticleEffects;
@@ -16,12 +17,15 @@ import rekkyn.spacetime.utility.MathUtil;
 import java.util.Iterator;
 import java.util.List;
 
-public class TileSpacetimeFluctuation extends TileEntity {
+public class TileSpacetimeFluctuation extends TileEntity implements IUpdatePlayerListBox {
 
     @Override
-    public void updateEntity() {
-        List list = worldObj.getEntitiesWithinAABBExcludingEntity(null, AxisAlignedBB
-                .getBoundingBox(xCoord - 10, yCoord - 10, zCoord - 10, xCoord + 10, yCoord + 10, zCoord + 10));
+    public void update() {
+        int x = getPos().getX();
+        int y = getPos().getY();
+        int z = getPos().getZ();
+        List list = worldObj
+                .getEntitiesWithinAABBExcludingEntity(null, AxisAlignedBB.fromBounds(x - 10, y - 10, z - 10, x + 10, y + 10, z + 10));
         Entity entity;
         for (Iterator iterator = list.iterator(); iterator.hasNext(); pullEntities(entity)) {
             entity = (Entity) iterator.next();
@@ -29,10 +33,14 @@ public class TileSpacetimeFluctuation extends TileEntity {
     }
 
     public void pullEntities(Entity entity) {
-        double xDist = xCoord + 0.5 - entity.posX;
-        double yDist = yCoord + 0.5 - entity.posY;
-        double zDist = zCoord + 0.5 - entity.posZ;
-        Vec3 dist = Vec3.createVectorHelper(xDist, yDist, zDist);
+        int x = getPos().getX();
+        int y = getPos().getY();
+        int z = getPos().getZ();
+
+        double xDist = x + 0.5 - entity.posX;
+        double yDist = y + 0.5 - entity.posY;
+        double zDist = z + 0.5 - entity.posZ;
+        Vec3 dist = new Vec3(xDist, yDist, zDist);
         if (dist.lengthVector() > 10) return;
 
         if (worldObj.rand.nextInt(400) == 0) {
@@ -48,12 +56,12 @@ public class TileSpacetimeFluctuation extends TileEntity {
                 if (spawnX * spawnX + spawnY * spawnY + spawnZ * spawnZ < radius * radius) break;
             }
 
-            ParticlePacket packet = new ParticlePacket(ParticleEffects.ParticleTypes.ORBIT, xCoord + spawnX + 0.5, yCoord + spawnY + 0.5,
-                                                       zCoord + spawnZ + 0.5, MathUtil.NegOneToOne() * 0.3, MathUtil.NegOneToOne() * 0.3,
+            ParticlePacket packet = new ParticlePacket(ParticleEffects.ParticleTypes.ORBIT, x + spawnX + 0.5, y + spawnY + 0.5,
+                                                       z + spawnZ + 0.5, MathUtil.NegOneToOne() * 0.3, MathUtil.NegOneToOne() * 0.3,
                                                        MathUtil.NegOneToOne() * 0.3, entity);
             SpacetimeMod.network.sendToAllAround(packet,
-                                                 new NetworkRegistry.TargetPoint(worldObj.provider.dimensionId, xCoord + spawnX + 0.5,
-                                                                                 yCoord + spawnY + 0.5, zCoord + spawnZ + 0.5, 32));
+                                                 new NetworkRegistry.TargetPoint(worldObj.provider.getDimensionId(), x + spawnX + 0.5,
+                                                                                 y + spawnY + 0.5, z + spawnZ + 0.5, 32));
         }
 
         if (entity instanceof EntityPlayer) {
@@ -77,7 +85,7 @@ public class TileSpacetimeFluctuation extends TileEntity {
     @SideOnly(Side.CLIENT)
     public AxisAlignedBB getRenderBoundingBox() {
         return AxisAlignedBB
-                .getBoundingBox(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY,
-                                Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
+                .fromBounds(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY,
+                            Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
     }
 }

@@ -11,10 +11,10 @@ public class Bezier {
 
     public float ti = 0f;
 
-    private Vec3 b0 = Vec3.createVectorHelper(0, 0, 0);
-    private Vec3 b1 = Vec3.createVectorHelper(0, 0, 0);
-    private Vec3 b2 = Vec3.createVectorHelper(0, 0, 0);
-    private Vec3 b3 = Vec3.createVectorHelper(0, 0, 0);
+    private Vec3 b0 = new Vec3(0, 0, 0);
+    private Vec3 b1 = new Vec3(0, 0, 0);
+    private Vec3 b2 = new Vec3(0, 0, 0);
+    private Vec3 b3 = new Vec3(0, 0, 0);
 
     private double Ax;
     private double Ay;
@@ -46,7 +46,7 @@ public class Bezier {
         double x = Ax * t3 + Bx * t2 + Cx * t + p0.xCoord;
         double y = Ay * t3 + By * t2 + Cy * t + p0.yCoord;
         double z = Az * t3 + Bz * t2 + Cz * t + p0.zCoord;
-        return Vec3.createVectorHelper(x, y, z);
+        return new Vec3(x, y, z);
     }
 
     private void setConstant() {
@@ -91,10 +91,10 @@ public class Bezier {
     }
 
     public static Bezier readFromPacket(ByteBuf buf) {
-        Vec3 v0 = Vec3.createVectorHelper(buf.readDouble(), buf.readDouble(), buf.readDouble());
-        Vec3 v1 = Vec3.createVectorHelper(buf.readDouble(), buf.readDouble(), buf.readDouble());
-        Vec3 v2 = Vec3.createVectorHelper(buf.readDouble(), buf.readDouble(), buf.readDouble());
-        Vec3 v3 = Vec3.createVectorHelper(buf.readDouble(), buf.readDouble(), buf.readDouble());
+        Vec3 v0 = new Vec3(buf.readDouble(), buf.readDouble(), buf.readDouble());
+        Vec3 v1 = new Vec3(buf.readDouble(), buf.readDouble(), buf.readDouble());
+        Vec3 v2 = new Vec3(buf.readDouble(), buf.readDouble(), buf.readDouble());
+        Vec3 v3 = new Vec3(buf.readDouble(), buf.readDouble(), buf.readDouble());
 
         return new Bezier(v0, v1, v2, v3);
     }

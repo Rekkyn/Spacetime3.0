@@ -1,8 +1,9 @@
 package rekkyn.spacetime.world;
 
-import cpw.mods.fml.common.IWorldGenerator;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunkProvider;
+import net.minecraftforge.fml.common.IWorldGenerator;
 
 import java.util.Random;
 
@@ -10,7 +11,7 @@ public class SpacetimeWorldGen implements IWorldGenerator {
 
     @Override
     public void generate(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider) {
-        switch (world.provider.dimensionId) {
+        switch (world.provider.getDimensionId()) {
             case -1:
                 generateNether(world, random, chunkX * 16, chunkZ * 16);
                 break;
@@ -29,7 +30,7 @@ public class SpacetimeWorldGen implements IWorldGenerator {
             int posY = rand.nextInt(128);
             int posZ = chunkZ + rand.nextInt(16);
 
-            new WorldGenFluctuation(5).generate(world, rand, posX, posY, posZ);
+            new WorldGenFluctuation(5).generate(world, rand, new BlockPos(posX, posY, posZ));
         }
     }
 

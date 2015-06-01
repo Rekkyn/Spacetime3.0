@@ -1,14 +1,15 @@
 package rekkyn.spacetime.particle;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 import rekkyn.spacetime.reference.Reference;
 import rekkyn.spacetime.utility.MathUtil;
@@ -55,7 +56,7 @@ public class OrbitParticle extends EntityFX {
             double yDist = getTargetPos()[1] - posY;
             double zDist = getTargetPos()[2] - posZ;
 
-            Vec3 dist = Vec3.createVectorHelper(xDist, yDist, zDist);
+            Vec3 dist = new Vec3(xDist, yDist, zDist);
 
             if (dist.lengthVector() < 0.3) {
                 setDead();
@@ -74,15 +75,15 @@ public class OrbitParticle extends EntityFX {
         setAlphaF(particleAge < particleMaxAge / 2 ? alphaFunction(particleAge) : alphaFunction(particleMaxAge - particleAge));
     }
 
+    //renderParticle
     @Override
     @SideOnly(Side.CLIENT)
-    public void renderParticle(Tessellator tessellator, float par2, float par3, float par4, float par5, float par6, float par7) {
+    public void func_180434_a(WorldRenderer worldrenderer, Entity e, float par2, float par3, float par4, float par5, float par6,
+                              float par7) {
 
-        tessellator.draw();
         Minecraft.getMinecraft().getTextureManager()
                  .bindTexture(new ResourceLocation(Reference.MOD_ID.toLowerCase() + ":textures/particles/particles.png"));
-        tessellator.startDrawingQuads();
-        tessellator.setBrightness(240);
+        worldrenderer.setBrightness(240);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
 
         //Note U=X V=Y
@@ -103,20 +104,20 @@ public class OrbitParticle extends EntityFX {
         float drawY = (float) (prevPosY + (posY - prevPosY) * (double) par2 - interpPosY);
         float drawZ = (float) (prevPosZ + (posZ - prevPosZ) * (double) par2 - interpPosZ);
 
-        tessellator.setColorRGBA_F(particleRed, particleGreen, particleBlue, particleAlpha);
+        worldrenderer.setColorRGBA_F(particleRed, particleGreen, particleBlue, particleAlpha);
 
-        tessellator.addVertexWithUV((double) (drawX - par3 * drawScale - par6 * drawScale), (double) (drawY - par4 * drawScale),
-                                    (double) (drawZ - par5 * drawScale - par7 * drawScale), (double) maxU, (double) maxV);
-        tessellator.addVertexWithUV((double) (drawX - par3 * drawScale + par6 * drawScale), (double) (drawY + par4 * drawScale),
-                                    (double) (drawZ - par5 * drawScale + par7 * drawScale), (double) maxU, (double) minV);
-        tessellator.addVertexWithUV((double) (drawX + par3 * drawScale + par6 * drawScale), (double) (drawY + par4 * drawScale),
-                                    (double) (drawZ + par5 * drawScale + par7 * drawScale), (double) minU, (double) minV);
-        tessellator.addVertexWithUV((double) (drawX + par3 * drawScale - par6 * drawScale), (double) (drawY - par4 * drawScale),
-                                    (double) (drawZ + par5 * drawScale - par7 * drawScale), (double) minU, (double) maxV);
+        worldrenderer.addVertexWithUV((double) (drawX - par3 * drawScale - par6 * drawScale), (double) (drawY - par4 * drawScale),
+                                      (double) (drawZ - par5 * drawScale - par7 * drawScale), (double) maxU, (double) maxV);
+        worldrenderer.addVertexWithUV((double) (drawX - par3 * drawScale + par6 * drawScale), (double) (drawY + par4 * drawScale),
+                                      (double) (drawZ - par5 * drawScale + par7 * drawScale), (double) maxU, (double) minV);
+        worldrenderer.addVertexWithUV((double) (drawX + par3 * drawScale + par6 * drawScale), (double) (drawY + par4 * drawScale),
+                                      (double) (drawZ + par5 * drawScale + par7 * drawScale), (double) minU, (double) minV);
+        worldrenderer.addVertexWithUV((double) (drawX + par3 * drawScale - par6 * drawScale), (double) (drawY - par4 * drawScale),
+                                      (double) (drawZ + par5 * drawScale - par7 * drawScale), (double) minU, (double) maxV);
 
-        tessellator.draw();
-        Minecraft.getMinecraft().getTextureManager().bindTexture(new ResourceLocation("textures/particle/particles.png"));
-        tessellator.startDrawingQuads();
+        Tessellator.getInstance().draw();
+        GL11.glBlendFunc(770, 771);
+        worldrenderer.startDrawingQuads();
     }
 
     public double[] getTargetPos() {

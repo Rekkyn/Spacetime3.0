@@ -1,11 +1,10 @@
 package rekkyn.spacetime.particle;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.world.World;
-import rekkyn.spacetime.utility.Bezier;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ParticleEffects {
     private static Minecraft mc = Minecraft.getMinecraft();
@@ -14,16 +13,16 @@ public class ParticleEffects {
     @SideOnly(Side.CLIENT)
     public static EntityFX spawnParticle(ParticleTypes type, double x, double y, double z, double motionX, double motionY, double motionZ,
                                          Object data) {
-        if (mc != null && mc.renderViewEntity != null && mc.effectRenderer != null) {
+        if (mc != null && mc.getRenderViewEntity() != null && mc.effectRenderer != null) {
             int particleSetting = mc.gameSettings.particleSetting;
 
             if (particleSetting == 1 && world.rand.nextInt(3) == 0) {
                 particleSetting = 2;
             }
 
-            double xdist = mc.renderViewEntity.posX - x;
-            double ydist = mc.renderViewEntity.posY - y;
-            double zdist = mc.renderViewEntity.posZ - z;
+            double xdist = mc.getRenderViewEntity().posX - x;
+            double ydist = mc.getRenderViewEntity().posY - y;
+            double zdist = mc.getRenderViewEntity().posZ - z;
             EntityFX effect = null;
             double maxDist = 16.0D;
 

@@ -12,16 +12,13 @@ public class SpacetimeFluctuationEntity extends Entity {
     public int delayBeforeCanPickup;
 
     public SpacetimeFluctuationEntity(World world, double x, double y, double z) {
-        super(world);
-        setSize(0.5F, 0.5F);
-        yOffset = height / 2.0F;
+        this(world);
         setPosition(x, y, z);
     }
 
     public SpacetimeFluctuationEntity(World world) {
         super(world);
         setSize(0.5F, 0.5F);
-        yOffset = height / 2.0F;
     }
 
     @Override
