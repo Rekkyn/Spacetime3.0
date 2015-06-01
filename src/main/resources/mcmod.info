@@ -1,0 +1,21 @@
+[
+{
+  "modid": "Spacetime",
+  "name": "Spacetime",
+  "description": "",
+  "version": "3.0",
+  "mcversion": "1.8",
+  "url": "",
+  "updateUrl": "",
+  "authorList": [
+    "Rekkyn"
+  ],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [
+  ],
+  "parent":"",
+  "dependencies": [
+  ]
+}
+]

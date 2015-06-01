@@ -1,0 +1,5 @@
+itemGroup.spacetime=Spacetime
+tile.spacetime:spacetimeFluctuation.name=Spacetime Fluctuation Block
+item.spacetime:spacetimeFluctuationItem.name=Spacetime Fluctuation
+item.spacetime:quantumRay.name=Quantum Ray
+entity.spacetime:spacetimeFluctuation.name=Spacetime Fluctuation
