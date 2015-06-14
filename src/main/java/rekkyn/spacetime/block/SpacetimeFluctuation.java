@@ -29,6 +29,7 @@ public class SpacetimeFluctuation extends GenericBlock implements ITileEntityPro
         super(material);
         setLightLevel(1);
         setBlockBounds(0.25F, 0.25F, 0.25F, 0.75F, 0.75F, 0.75F);
+        setResistance(2000.0F);
     }
 
     @Override
@@ -50,33 +51,6 @@ public class SpacetimeFluctuation extends GenericBlock implements ITileEntityPro
         ParticleEffects.spawnParticle(ParticleEffects.ParticleTypes.ORBIT, x + spawnX + 0.5, y + spawnY + 0.5, z + spawnZ + 0.5,
                                       MathUtil.NegOneToOne() * 0.3, MathUtil.NegOneToOne() * 0.3, MathUtil.NegOneToOne() * 0.3,
                                       new double[]{ x + 0.5, y + 0.5, z + 0.5 });
-    }
-
-    @Override
-    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer entity, EnumFacing side, float hitX,
-                                    float hitY, float hitZ) {
-        int x = pos.getX();
-        int y = pos.getY();
-        int z = pos.getZ();
-
-        double radius = 8;
-        double spawnX;
-        double spawnY;
-        double spawnZ;
-        while (true) {
-            spawnX = MathUtil.NegOneToOne() * radius;
-            spawnY = MathUtil.NegOneToOne() * radius;
-            spawnZ = MathUtil.NegOneToOne() * radius;
-
-            if (spawnX * spawnX + spawnY * spawnY + spawnZ * spawnZ < radius * radius) break;
-        }
-
-        ParticlePacket packet = new ParticlePacket(ParticleEffects.ParticleTypes.ORBIT, x + spawnX + 0.5, y + spawnY + 0.5,
-                                                   z + spawnZ + 0.5, MathUtil.NegOneToOne() * 0.3, MathUtil.NegOneToOne() * 0.3,
-                                                   MathUtil.NegOneToOne() * 0.3, entity);
-        SpacetimeMod.network.sendToAllAround(packet, new NetworkRegistry.TargetPoint(world.provider.getDimensionId(), x + spawnX + 0.5,
-                                                                                     y + spawnY + 0.5, z + spawnZ + 0.5, 32));
-        return true;
     }
 
     @Override

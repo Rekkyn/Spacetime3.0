@@ -125,7 +125,7 @@ public class OrbitParticle extends EntityFX {
             return (double[]) target;
         } else if (target instanceof Entity) {
             Entity e = (Entity) target;
-            return new double[]{ e.posX, e.posY, e.posZ };
+            return new double[]{ e.posX, e.posY + e.getEyeHeight(), e.posZ };
         } else {
             return null;
         }

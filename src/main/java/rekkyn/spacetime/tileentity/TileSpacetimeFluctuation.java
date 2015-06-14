@@ -43,7 +43,7 @@ public class TileSpacetimeFluctuation extends TileEntity implements IUpdatePlaye
         Vec3 dist = new Vec3(xDist, yDist, zDist);
         if (dist.lengthVector() > 10) return;
 
-        if (worldObj.rand.nextInt(400) == 0) {
+        if (worldObj.rand.nextInt(40) == 0) {
             double radius = 8;
             double spawnX;
             double spawnY;
